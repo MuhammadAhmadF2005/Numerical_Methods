@@ -3,12 +3,44 @@ from math import cos, sin, tan, sinh, cosh, tanh, asin, acos, atan, asinh, acosh
 from math import exp, log, log10, log2, e, pi
 
 
-def newton_raphson(f, df, p0, tol=1e-5, max_iter=100):
+def differentiate(f, h=1e-7):
+    """
+    Approximates the derivative f'(x) of function f using
+    the central difference formula:
+        f'(x) ≈ (f(x + h) - f(x - h)) / (2 * h)
+    """
+    return lambda x: (f(x + h) - f(x - h)) / (2 * h)
+
+
+derivative = differentiate  # Alias for convenience
+
+
+def newton_raphson(f, *args, df=None, tol=1e-5, max_iter=100, **kwargs):
     """
     Implements the Newton-Raphson Method from Burden & Faires.
-    Requires f and its derivative df.
+    If df (derivative) is not provided, it is automatically computed using
+    numerical differentiation.
     Stops when |p - p0| < tol or f(p) == 0.
     """
+    p0 = kwargs.get("p0", None)
+
+    if len(args) == 1:
+        if callable(args[0]):
+            df = args[0]
+        else:
+            p0 = args[0]
+    elif len(args) >= 2:
+        if callable(args[0]):
+            df, p0 = args[0], args[1]
+        else:
+            p0, df = args[0], args[1]
+
+    if p0 is None:
+        raise ValueError("Initial approximation 'p0' must be provided.")
+
+    if df is None:
+        df = differentiate(f)
+
     # Header
     print(f"{'n':>3} | {'p_n':>15} | {'f(p_n)':>13} | {'|p_n - p_{n-1}|':>18}")
     print("-" * 60)
@@ -42,7 +74,6 @@ def newton_raphson(f, df, p0, tol=1e-5, max_iter=100):
 
 # --- Examples from the book ---
 if __name__ == "__main__":
-    # f(x) = cos(x) - x, f'(x) = -sin(x) - 1
-    f = lambda x: cos(x) - x
-    df = lambda x: -sin(x) - 1
-    newton_raphson(f, df, p0=pi / 4, tol=1e-5)
+    f = lambda x: sin(cos(exp(x)))
+    newton_raphson(f, p0=0.5, tol=1e-5)
+
