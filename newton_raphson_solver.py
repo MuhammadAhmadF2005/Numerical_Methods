@@ -74,6 +74,6 @@ def newton_raphson(f, *args, df=None, tol=1e-5, max_iter=100, **kwargs):
 
 # --- Examples from the book ---
 if __name__ == "__main__":
-    f = lambda x: sin(cos(exp(x)))
-    newton_raphson(f, p0=0.5, tol=1e-5)
+    f = lambda x: x**3 - 4*x + 1
+    newton_raphson(f, p0=1, tol=1e-5)
 

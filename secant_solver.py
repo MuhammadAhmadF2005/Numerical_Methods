@@ -45,5 +45,5 @@ def secant_method(f, p0, p1, tol=1e-5, max_iter=100):
 # --- Examples from the book ---
 if __name__ == "__main__":
     # f(x) = cos(x) - x
-    f = lambda x: cos(x) - x
-    secant_method(f, p0=0.5, p1=pi / 4, tol=1e-5)
+    f = lambda x: x**2 - 2
+    secant_method(f, p0=1, p1=2, tol=1e-5)
